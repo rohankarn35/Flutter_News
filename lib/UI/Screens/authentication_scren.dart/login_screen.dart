@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_news/UI/widgets/customButton.dart';
 import 'package:flutter_news/UI/widgets/customTextfield.dart';
+import 'package:flutter_news/UI/widgets/customToast.dart';
+import 'package:flutter_news/services/firebaseService/login_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +21,14 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Padding(
+          padding: EdgeInsets.only(top: 16.0), // Adjust top padding as needed
+          child: Text("Flutter News", style: TextStyle(color: Colors.white)),
+        ),
+        backgroundColor: Color.fromARGB(255, 2, 18, 46),
+      ),
       backgroundColor: Color.fromARGB(255, 2, 18, 46),
       body: Center(
         child: SingleChildScrollView(
@@ -55,10 +67,27 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: true),
                 const SizedBox(height: 10),
                 const SizedBox(height: 15),
-                CustomButton().customButton("Login", () {}),
+                CustomButton().customButton("Login", () async {
+                  if (_emailTextEditingController.text.isEmpty && _passwordTextEditingController.text.isEmpty) {
+                    ToastMessage.showToast("All Fields are mandatory");
+                    return;
+                    
+                  }
+                  final UserCredential? credential = await LoginService()
+                      .loginService(_emailTextEditingController.text,
+                          _passwordTextEditingController.text);
+                 if (credential!=null) {
+                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.setBool("isLogginned", true);
+                  Navigator.pushReplacementNamed(context, '/home');
+                   
+                 }
+                }),
                 const SizedBox(height: 30),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/signup');
+                  },
                   child: const Text(
                     "Don't have an account? Sign Up",
                     style: TextStyle(
