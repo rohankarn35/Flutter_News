@@ -88,14 +88,12 @@ class ListViewScreen extends StatelessWidget {
                 ),
                 onTap: () {
                   // print(news.description);
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => NewsWebView(
-                  //       url: news.newsUrl,
-                  //     ),
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewsWebView(url: news.newsUrl),
+                    ),
+                  );
                 },
               );
             }));
