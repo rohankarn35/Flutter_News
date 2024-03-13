@@ -11,6 +11,7 @@ class NewsModelHive extends HiveObject {
   String newsUrl;
   @HiveField(3)
   String imageUrl;
+  @HiveField(4)
   NewsModelHive(
       {required this.title,
       required this.description,

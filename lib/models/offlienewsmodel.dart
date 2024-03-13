@@ -1,12 +1,12 @@
-class FirebaseNewsModel {
+class OfflineNewsModel {
   String title;
   String description;
   String newsUrl;
-  String imageUrl;
+  String imagedata;
 
-  FirebaseNewsModel(
+  OfflineNewsModel(
       {required this.title,
       required this.description,
       required this.newsUrl,
-      required this.imageUrl});
+      required this.imagedata});
 }

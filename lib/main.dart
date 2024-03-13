@@ -4,6 +4,7 @@ import 'package:flutter_news/firebase_options.dart';
 import 'package:flutter_news/models/newModelHive.dart';
 import 'package:flutter_news/providers/newprovider.dart';
 import 'package:flutter_news/routes/routes.dart';
+import 'package:flutter_news/utils/internetChecker.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ void main() async {
   var directory = await getApplicationDocumentsDirectory();
   Hive.init(directory.path);
   await Hive.openBox<NewsModelHive>('newsBox');
+
   runApp(const MyApp());
 }
 

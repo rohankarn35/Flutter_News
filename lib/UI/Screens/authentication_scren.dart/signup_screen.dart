@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_news/UI/widgets/customButton.dart';
 import 'package:flutter_news/UI/widgets/customTextfield.dart';
 import 'package:flutter_news/UI/widgets/customToast.dart';
+import 'package:flutter_news/services/firebaseService/firebaseAddUser.dart';
 import 'package:flutter_news/services/firebaseService/signup_service.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -104,15 +105,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ToastMessage.showToast("Password Does Not Match");
                     return;
                   }
-                  if (_confirmPasswordTextEditingController.text.isEmpty&& _emailTextEditingController.text.isEmpty && _fullNameTextEditingController.text.isEmpty) {
+                  if (_confirmPasswordTextEditingController.text.isEmpty &&
+                      _emailTextEditingController.text.isEmpty &&
+                      _fullNameTextEditingController.text.isEmpty) {
                     ToastMessage.showToast("All Fields are Mandatory");
                     return;
-                    
                   }
                   final bool isLoggin = await SignUpService().signUpService(
                       _emailTextEditingController.text,
                       _confirmPasswordTextEditingController.text);
                   if (isLoggin) {
+                    await FirebaseAddUser().addUser(
+                        _emailTextEditingController.text,
+                        _fullNameTextEditingController.text);
                     Navigator.pushNamed(context, '/login');
                   }
                 }),

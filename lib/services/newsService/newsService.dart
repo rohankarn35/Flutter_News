@@ -3,12 +3,13 @@ import 'package:flutter_news/models/box.dart';
 import 'package:flutter_news/models/newModelHive.dart';
 import 'package:flutter_news/models/newsModel.dart';
 import 'package:flutter_news/secrets.dart';
+import 'package:flutter_news/utils/offlienimageutils.dart';
 import 'package:http/http.dart' as http;
 import 'package:hive/hive.dart';
 
 class NewsService {
   final apikey = Secrets.apikey;
- 
+
   final String baseUrl =
       'https://newsapi.org/v2/top-headlines?country=in&category=health';
 
@@ -24,11 +25,13 @@ class NewsService {
 
         for (var article in articles) {
           final NewsModel news = NewsModel.fromJson(article);
+          final imagedata = await offlineImage.saveImage(news.imageUrl);
+
           final newsToHiveMode = NewsModelHive(
             title: news.title,
             description: news.description,
             newsUrl: news.newsUrl,
-            imageUrl: news.imageUrl,
+            imageUrl: imagedata!,
           );
           box.add(newsToHiveMode);
         }
@@ -39,9 +42,4 @@ class NewsService {
       throw Exception('Failed to fetch news: $e');
     }
   }
-
-
-
-
-
 }

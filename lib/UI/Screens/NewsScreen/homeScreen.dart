@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news/UI/Screens/NewsScreen/favouriteNewsScreen.dart';
 import 'package:flutter_news/UI/Screens/NewsScreen/gridViewScreen.dart';
 import 'package:flutter_news/UI/Screens/NewsScreen/listviewScreen.dart';
 import 'package:flutter_news/models/box.dart';
 import 'package:flutter_news/models/newsModel.dart';
 import 'package:flutter_news/providers/newprovider.dart';
+import 'package:flutter_news/services/firebaseService/showfavouritenews.dart';
 import 'package:flutter_news/services/newsService/newsService.dart';
+import 'package:flutter_news/utils/internetChecker.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,9 +18,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  void isConnected() async {
+    if (await Internetchecker().isInternetConnected()) {
+      Provider.of<NewsProvider>(context, listen: false).getNewsData();
+    } else {
+      Provider.of<NewsProvider>(context, listen: false)
+          .getNewsDataWhenOffline();
+    }
+  }
+
   @override
   void initState() {
-    Provider.of<NewsProvider>(context, listen: false).getNewsData();
+
+    isConnected();
+    final box = Boxes.getData();
+    print(box.length);
     // TODO: implement initState
     super.initState();
   }
@@ -39,11 +54,22 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             actions: [
               Padding(
-                padding: const EdgeInsets.only(top: 16),
+                  padding: const EdgeInsets.only(top: 16,),
+                  child: GestureDetector(
+                    
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteScreen()));
+                    },
+                    child: Icon(Icons.bookmark, color: Colors.white))),
+              Padding(
+                padding: const EdgeInsets.only(top: 16,right: 5),
                 child: IconButton(
-                  icon: Icon(provider.isGrid
-                      ? Icons.list_rounded
-                      : Icons.grid_view_rounded,color: Colors.white,),
+                  icon: Icon(
+                    provider.isGrid
+                        ? Icons.list_rounded
+                        : Icons.grid_view_rounded,
+                    color: Colors.white,
+                  ),
                   onPressed: () {
                     provider.changeView();
                   },
@@ -52,16 +78,19 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           body: provider.isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? Center(
+                  child: CircularProgressIndicator(
+                  color: Colors.white,
+                ))
               : provider.isGrid
                   ? Padding(
-                    padding: const EdgeInsets.only(top: 22.0),
-                    child: GridViewScreen(newsList: provider.newsList),
-                  )
+                      padding: const EdgeInsets.only(top: 22.0),
+                      child: GridViewScreen(newsList: provider.newsList),
+                    )
                   : Padding(
-                    padding: const EdgeInsets.only(top: 22.0),
-                    child: ListViewScreen(newsList: provider.newsList),
-                  ),
+                      padding: const EdgeInsets.only(top: 22.0),
+                      child: ListViewScreen(newsList: provider.newsList),
+                    ),
         );
       },
     );

@@ -33,6 +33,7 @@ class SignUpService {
       ToastMessage.showToast(message);
       return false;
     } catch (e) {
+      print(e);
       // Handle unexpected errors
       ToastMessage.showToast("An unexpected error occurred. Please try again.");
       return false;

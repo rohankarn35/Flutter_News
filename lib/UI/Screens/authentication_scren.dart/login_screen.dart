@@ -79,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                  if (credential!=null) {
                   final SharedPreferences prefs = await SharedPreferences.getInstance();
                   prefs.setBool("isLogginned", true);
+                  prefs.setString("email", _emailTextEditingController.text);
                   Navigator.pushReplacementNamed(context, '/home');
                    
                  }
